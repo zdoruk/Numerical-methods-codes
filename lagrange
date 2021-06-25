@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAXCHAR 1000
+
+double Lagrange(int n, int k,double value);
+double* x;
+double* y;
+double Calculate(int n, double x);
+
+int main() {
+
+    int size,i;
+    double question;
+
+    FILE *fp;
+    char* filename = "veri.txt";
+
+    fp = fopen(filename, "r");
+    if (!fp) {
+        fprintf(stderr, "Cannot open %s: %s.\n", filename, strerror(errno));
+        return EXIT_FAILURE;
+    }
+
+    fscanf(fp, "%d", &size);
+    printf("Size: %d\n\n", size);
+
+    y = (double*)malloc(sizeof(double)*size);
+    x = (double*)malloc(sizeof(double)*size);
+
+    for (i = 0; i < size; i++) {
+        if (fscanf(fp, " %le %le", &(x[i]), &(y[i])) != 2) {
+            fprintf(stderr, "Invalid data in %s.\n", filename);
+            fclose(fp);
+            return EXIT_FAILURE;
+        }
+
+        printf("Read %4.2lf and %4.7lf from %s.\n", x[i], y[i], filename);
+    }
+    if (ferror(fp)) {
+        fclose(fp);
+        fprintf(stderr, "Error reading %s.\n", filename);
+        return EXIT_FAILURE;
+    }
+    if (fclose(fp)) {
+        fprintf(stderr, "Error closing %s.\n", filename);
+        return EXIT_FAILURE;
+    }
+
+    printf("\nAll %d pairs of doubles read successfully.\n", size);
+
+
+
+    printf("\nPlease enter point to calculate:");
+    scanf("%lf", &question);
+	printf("\n");
+    printf("Result =====> f(%4.2lf) = %5.7lf\n",question, Calculate(size, question));
+    printf("\n");
+
+    return 0;
+}
+
+double Lagrange(int n, int k, double val)
+{
+    double result = 1;
+    for (int i = 0; i < n; i++)
+    {
+        if (i!=k)
+            result = result * (double)((val - x[i]) / (x[k] - x[i]));
+    }
+
+    return result;
+}
+
+double Calculate(int n, double x)
+{
+    double intPolation = 0;
+    double *L = (double*)malloc(sizeof(double)*n);
+
+    for (int i = 0; i < n; i++)
+    {
+        L[i] = Lagrange(n, i, x);
+        intPolation += y[i] * L[i];
+        printf("L(%d) = % 5.7lf\n", i, L[i]);
+    }
+
+    printf("\n");
+    return intPolation;
+}
