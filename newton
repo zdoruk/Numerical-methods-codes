@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <conio.h>
+#include <math.h>
+
+#define f(x) pow(x, 3) - 7 * pow(x, 2) + 14 * x - 6
+#define fd(x) 3 * pow(x, 2) - 14 * x+ 14
+#define e 0.001
+
+int main()
+{
+    double a,b,c,d,h,k,x,y;
+    int i,j,m,n;
+    printf(" Enter the value of pn: ");
+    scanf("%lf",&a);
+    printf(" Enter itteration number: ");
+    scanf("%d",&n);
+    printf("  pn             f(p)           f'(p)          hn=-f(p)/f'(xp)  pn+1=pn+h\n");
+    printf("-----------------------------------------------------------------------------------------\n");
+    for(i=1;i<=n;i++)
+    {
+        x=f(a);
+        y=fd(x);
+        h=-(x/y);
+        k=h+a;
+        printf(" % .7lf     % .7lf     % .7lf     % .7lf       % .7lf\n",a,x,y,h,k);
+        a=k;
+    }
+     printf("\n The approximation to the root is %.7lf which is upto 7D",k);
+
+    return 0;
+}
